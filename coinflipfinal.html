@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="coin_game" content="for_fun">
+    <title>Coin Flip Game</title>
+    <style>
+         body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+        }
+        #game-box {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: beige;
+        }
+        #coin {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
+            background-color: gold;
+            position: relative;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-out;
+        }
+        .side {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            backface-visibility: hidden;
+            border-radius: 50%;
+            background-color: gold;
+        }
+        .head {
+            transform: rotateY(0deg);
+        }
+        .tail {
+            transform: rotateY(180deg);
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        #score {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        #player-select {
+            margin-top: 20px;
+        }
+        #rules {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .buttonflip, .buttonreset {
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-box">
+        <div id="coin">
+            <div class="side head">Heads</div>
+            <div class="side tail">Tails</div>
+        </div>
+        <div id="result"></div>
+        <div id="score">
+            <div id="player1">Player 1: 0</div>
+            <div id="player2">Player 2: 0</div>
+        </div>
+        <div id="player-select">
+            <label for="select">Select Heads or Tails:</label>
+            <select id="select">
+                <option value="heads">Heads</option>
+                <option value="tails">Tails</option>
+            </select>
+        </div>
+        <button class="buttonflip" onclick="flipCoin()">Flip Coin</button>
+        <button class="buttonreset" onclick="resetGame()">Reset Game</button>
+        <div id="rules">Rule: The first player to win 3 times is the overall winner.</div>
+    </div>
+    <script>
+        let player1Score = 0;
+        let player2Score = 0;
+        const coin = document.getElementById('coin');
+        const resultElement = document.getElementById('result');
+        const player1ScoreElement = document.getElementById('player1');
+        const player2ScoreElement = document.getElementById('player2');
+        const playerSelect = document.getElementById('select');
+        function flipCoin() {
+            let rotation = 0;
+            if (coin.style.transform === 'rotateY(0deg)') {
+                rotation = 180;
+            }
+            coin.style.transition = 'transform 1s ease-out';
+            coin.style.transform = 'rotateY(' + rotation + 'deg)';
+            const selectedValue = playerSelect.value;
+            let winner = '';
+            if ((rotation === 0 && selectedValue === 'heads') || (rotation === 180 && selectedValue === 'tails')) {
+                winner = 'Player 1';
+                player1Score++;
+            } else {
+                winner = 'Player 2';
+                player2Score++;
+            }
+            resultElement.textContent = winner + ' wins!';
+            updateScores();
+            if (player1Score === 3 || player2Score === 3) {
+                setTimeout(function () {
+                    alert(winner + ' has reached 3 wins! Game Over.');
+                    resetGame();
+                }, 1000);
+            }
+        }
+        function resetGame() {
+            player1Score = 0;
+            player2Score = 0;
+            resultElement.textContent = '';
+            updateScores();
+            coin.style.transition = 'none';
+            coin.style.transform = 'rotateY(0deg)';
+        }
+        function updateScores() {
+            player1ScoreElement.textContent = 'Player 1: ' + player1Score;
+            player2ScoreElement.textContent = 'Player 2: ' + player2Score;
+        }
+    </script>
+</body>
+
+
+
+
+
